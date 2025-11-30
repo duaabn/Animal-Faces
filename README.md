@@ -1,48 +1,42 @@
-# 🐾 Animal-Faces: High-Reliability Classification using EfficientNetB0
+# 🐾 Animal-Faces: High-Reliability Classification Client (MLOps via External API)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python: 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue)]
 
 ## 🌟 Project Overview
 
-This project provides a **high-reliability animal classification system** capable of distinguishing between **Cats**, **Dogs**, and **Wild** animals. It uses the pre-trained **EfficientNetB0** deep learning architecture and features a robust deployment strategy based on **MLOps** principles.
+This repository hosts the **Client Interface** for a high-reliability animal classification model (Cats, Dogs, Wild).
 
-The model is served using **FastAPI** (as a backend) and demonstrated with a user-friendly **Gradio** interface, all packaged within a **Docker** container for consistent and reproducible deployment.
+The core classification logic is **not run locally**. Instead, this application is designed to act as a **Gradio Client** that sends image data to an **externally deployed FastAPI API** on Hugging Face Spaces and displays the prediction result. This is a common pattern in MLOps for managing model serving separately from the front-end application.
 
 ---
 
 ## 🛠️ Key Technologies and Components
 
-| Component | Technology | Purpose |
+| Component | Technology | Role in this Repository |
 | :---: | :---: | :---: |
-| **Model** | EfficientNetB0 (224x224) | High-performance base classifier. |
-| **Optimization** | BN Unfreeze | Fine-tuning technique used in the notebook (`ipynb`). |
-| **API** | FastAPI | Fast, asynchronous backend for prediction serving. |
-| **Interface** | Gradio | Simple web interface for live testing. |
-| **Deployment** | Docker | Containerization for reproducible MLOps workflow. |
+| **Deployed Model** | EfficientNetB0 | Runs on the external server (Hugging Face Spaces). |
+| **External API** | **FastAPI** | Provides the prediction endpoint for image submission. |
+| **Local Interface** | Gradio | Simple web interface for local user interaction. |
+| **Containerization** | Docker | Ensures the local Gradio client runs reliably. |
 
 ---
 
-## ⬇️ Prerequisites: Model Weights Download
+## 🔗 External API Endpoint
 
-**⚠️ IMPORTANT:** The actual trained model weights (`best_efficientnetb0_224_model.keras`) are **not** stored on GitHub due to file size limits.
+The local application connects to the following **live API endpoint** for all predictions:
 
-**Before running the Docker commands, you must:**
-
-1.  **Download the Model:** Get the file from the external host: **[PLACE YOUR DOWNLOAD LINK HERE]**
-    *(Make sure this link is publicly accessible.)*
-2.  **Place the File:** Save the downloaded file (`best_efficientnetb0_224_model.keras`) directly into the **root directory** of this repository.
+* **API Documentation (OpenAPI/Swagger):** [https://duaabn555-animalfacesv2.hf.space/docs#/default/predict_animal_type_predict_animal__post](https://duaabn555-animalfacesv2.hf.space/docs#/default/predict_animal_type_predict_animal__post)
 
 ---
 
 ## 🚀 Deployment Guide (Using Docker)
 
-The easiest way to run the classifier is by using Docker, which ensures all dependencies are correctly handled.
+Running this project involves building and starting the local Gradio client container.
 
 ### 1. Requirements
 
 * **Docker** installed and running on your system.
-* **Model Weights** file placed in the root directory (as described above).
 
 ### 2. Build and Run
 
@@ -50,11 +44,9 @@ Execute these commands from the root directory of the repository:
 
 ```bash
 # 1. Build the Docker Image
-# This step uses the Dockerfile and installs all dependencies from requirements.txt
-docker build -t animal-faces-classifier .
+# This creates the environment for the Gradio Client application.
+docker build -t animal-faces-client .
 
 # 2. Run the Container
-# We map the container's internal port 7860 (where Gradio runs) to your host port 7860
-docker run -d -p 7860:7860 --name animal_app animal-faces-classifier
-# Run the container (assuming deployment is on port 8000)
-docker run -d -p 8000:8000 --name animal_app animal-faces-classifier
+# Map the container's internal port 7860 to your host machine.
+docker run -d -p 7860:7860 --name animal_client animal-faces-client
