@@ -7,7 +7,7 @@
 
 This repository hosts the **Client Interface** for a high-reliability animal classification model (Cats, Dogs, Wild).
 
-The core classification logic is **not run locally**. Instead, this application is designed to act as a **Gradio Client** that sends image data to an **externally deployed FastAPI API** on Hugging Face Spaces and displays the prediction result. This is a common pattern in MLOps for managing model serving separately from the front-end application.
+The core classification logic is **not run locally**. Instead, this application is designed to act as a **Gradio Client** that sends image data to an **externally deployed FastAPI API** on Hugging Face Spaces and displays the prediction result. This pattern separates the front-end application from the high-load model serving.
 
 ---
 
@@ -27,6 +27,14 @@ The core classification logic is **not run locally**. Instead, this application 
 The local application connects to the following **live API endpoint** for all predictions:
 
 * **API Documentation (OpenAPI/Swagger):** [https://duaabn555-animalfacesv2.hf.space/docs#/default/predict_animal_type_predict_animal__post](https://duaabn555-animalfacesv2.hf.space/docs#/default/predict_animal_type_predict_animal__post)
+
+---
+
+## 📊 Training and Data Source
+
+The EfficientNetB0 model was originally trained and fine-tuned using the following resources, which detail the data preprocessing steps and model optimization (e.g., BN Unfreeze):
+
+* **Dataset Source:** [Animal Faces Dataset (Kaggle)](https://www.kaggle.com/datasets/andrewmvd/animal-faces)
 
 ---
 
@@ -50,3 +58,4 @@ docker build -t animal-faces-client .
 # 2. Run the Container
 # Map the container's internal port 7860 to your host machine.
 docker run -d -p 7860:7860 --name animal_client animal-faces-client
+
