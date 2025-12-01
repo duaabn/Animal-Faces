@@ -1,5 +1,0 @@
-tensorflow
-numpy
-pillow            
-scikit-learn 
-gradio>=4.0.0
